@@ -5,7 +5,6 @@
  *      Author: takka
  */
 
-#include "../../lib/zlib/zlib.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -13,6 +12,7 @@
 #include "ciso.h"
 #include "file.h"
 
+#include <zlib.h>
 /*---------------------------------------------------------------------------
   deflateの解凍を行う
     char* o_buff 解凍先

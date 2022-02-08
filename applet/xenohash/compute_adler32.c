@@ -1,5 +1,5 @@
 #include "../../xenobox.h"
-#include "../../lib/zlib/zlib.h"
+#include <zlib.h>
 
 int compute_adler32(FILE *f, const char *name, const char *desired){
 	u32 crc=1;

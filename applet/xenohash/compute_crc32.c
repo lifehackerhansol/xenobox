@@ -1,5 +1,5 @@
 #include "../../xenobox.h"
-#include "../../lib/zlib/zlib.h"
+#include <zlib.h>
 
 // clone of /usr/bin/crc32 from CPAN Archive::Zip
 int compute_crc32(FILE *f, const char *name, const char *desired){

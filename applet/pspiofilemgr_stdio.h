@@ -92,7 +92,7 @@ typedef struct stat SceIoStat;
 #define FIO_S_IWOTH S_IWOTH
 #define FIO_S_IXOTH S_IXOTH
 
-#define sceIoOpen(name,flag,mode) open(name,flag)
+#define sceIoOpen(name,flag,mode) open(name,flag,mode)
 #define sceIoClose close
 #define sceIoRead read
 #define sceIoWrite write

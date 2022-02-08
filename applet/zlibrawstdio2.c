@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../lib/zlib/zlib.h"
+#include <zlib.h>
 #include "../lib/lzma.h"
 
 #if defined(WIN32) || (!defined(__GNUC__) && !defined(__clang__))

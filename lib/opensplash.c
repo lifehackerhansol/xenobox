@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "zlib/zlib.h"
+#include <zlib.h>
 #include "libmshlsplash.h"
 
 int zlib_decompress(const void *compbuf, const u32 compsize, void *decompbuf, const u32 decompsize){

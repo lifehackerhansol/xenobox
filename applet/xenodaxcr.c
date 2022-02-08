@@ -1,5 +1,5 @@
 #include "../xenobox.h"
-#include "../lib/zlib/zlib.h"
+#include <zlib.h>
 
 typedef struct
 {

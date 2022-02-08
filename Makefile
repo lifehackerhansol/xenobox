@@ -28,10 +28,10 @@ export STRIP	:=	$(PREFIX)strip
 
 #--- set path
 ### relative path from build
-#LIBS	+=
+LIBS	+= -lz -ldl
 export LIBS
 
-LIBDIRS	:=	
+LIBDIRS	:=	libs
 export LIBDIRS
 
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \

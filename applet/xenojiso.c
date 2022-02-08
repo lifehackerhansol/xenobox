@@ -1,6 +1,6 @@
 #include "../xenobox.h"
 #include "unlzop.h"
-#include "../lib/zlib/zlib.h"
+#include <zlib.h>
 
 typedef struct
 {

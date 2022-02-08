@@ -50,7 +50,7 @@ int gzprx(const int argc, const char **argv){
 	fseek(elf,0,SEEK_SET);
 
 	//fprintf(stderr,"%s: ",argv[i]);
-	fd=open(argv[1],OPEN_BINARY|O_WRONLY|O_CREAT|O_TRUNC);
+	fd=open(argv[1],OPEN_BINARY|O_WRONLY|O_CREAT|O_TRUNC, 0777);
 	if(fd==-1){
 		fprintf(stderr,"Cannot open %s\n",argv[1]);
 		return 20;

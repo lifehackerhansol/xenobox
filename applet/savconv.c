@@ -323,7 +323,7 @@ bool savConvert(const char *file){
 				fprintf(stderr,"*** convert sav to gds (gameshark) ***\n");
 				FILE *in=fopen(file,"rb");
 				if(!in){fprintf(stderr,"cannot open %s\n",file);return false;}
-				int _out=open(to,OPEN_BINARY|O_WRONLY|O_CREAT|O_TRUNC);
+				int _out=open(to,OPEN_BINARY|O_WRONLY|O_CREAT|O_TRUNC, 0777);
 				if(!_out){fclose(in);fprintf(stderr,"cannot open %s\n",file);return false;}
 
 				char header[256];

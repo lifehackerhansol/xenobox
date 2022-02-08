@@ -117,7 +117,7 @@ extern "C"{
 #include <limits.h>
 #include <time.h>
 
-#include "lib/zlib/zlib.h"
+#include <zlib.h>
 
 typedef unsigned char byte;
 #ifndef FEOS
