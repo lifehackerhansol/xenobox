@@ -28,11 +28,18 @@ export STRIP	:=	$(PREFIX)strip
 
 #--- set path
 ### relative path from build
-LIBS	+= -lz -ldl
+ifneq ($(OS),Windows_NT)
+LIBS	+=	-ldl
+endif
+LIBS	+= -lz
 export LIBS
 
-LIBDIRS	:=	libs
+LIBDIRS	:=	lib /lib
 export LIBDIRS
+
+ifeq ($(OS),Windows_NT)
+export SUFF	:=	.exe
+endif
 
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
@@ -53,25 +60,16 @@ CFLAGS	+=	$(INCLUDE)
 CXXFLAGS	:=	$(CFLAGS) -fno-exceptions
 #lovely hack...
 #bah -Wno-pointer-sign must be stripped for iPodLinux
-CFLAGS	+=  -Wno-pointer-sign -std=gnu99
+# CFLAGS	+=  -Wno-pointer-sign -std=gnu99
 
 ASFLAGS	:=	$(ARCH)
-LDFLAGS	=	$(ARCH) $(LDF) -O2
+LDFLAGS	=	$(ARCH) $(LDF) -O2 -static
 #-Wl,-Map,$(notdir $*.map)
 
-ifneq ($(USTL),)
-#you need to give libustl path. It must be linked statically.
-	CXXFLAGS += -DUSTL
-	LIBS += -lsupc++
-	ifneq ($(WIN32),)
-		LDFLAGS += -static-libgcc
-	endif
-else
-	CXXFLAGS += -fno-rtti
-	ifneq ($(WIN32),)
-		LDFLAGS += -static-libgcc -static-libstdc++
-	endif
-endif
+
+CXXFLAGS += -fno-rtti
+LDFLAGS += -static-libgcc -static-libstdc++
+
 
 
 
@@ -108,7 +106,7 @@ export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
  
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
-	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile -j4
+	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile -j8
 
 clean:
 	@#echo clean ...

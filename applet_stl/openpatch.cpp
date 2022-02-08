@@ -5,22 +5,16 @@
 //#include <sstream>
 //#include <fstream>
 
-#ifdef USTL
-#include <ustl.h>
-using namespace ustl;
-#else
 #include <map>
 #include <vector>
 #include <string>
-using namespace std;
-#endif
 
 #include "../xenobox.h"
 
 //static unsigned char head[512];
 
-string validate1(string &s){
-	string ret="";
+std::string validate1(std::string &s){
+	std::string ret="";
 	size_t i=0;
 	for(;i<s.size();i++){
 		if('0'<=s[i]&&s[i]<='9')ret+=(char)s[i];
@@ -31,8 +25,8 @@ string validate1(string &s){
 	return ret;
 }
 
-string validate2(string &s){
-	string ret="";
+std::string validate2(std::string &s){
+	std::string ret="";
 	size_t i=0;
 	for(;i<s.size();i++){
 		if('0'<=s[i]&&s[i]<='9')ret+=(char)s[i];
@@ -45,23 +39,23 @@ string validate2(string &s){
 
 extern "C" int openpatch(const int argc, const char **argv){
 	//ifstream patch;
-	string tmp;
+	std::string tmp;
 	FILE *patch=NULL,*nds=NULL;
 	if(argc<3){printf("openpatch patch.txt ROM.nds...\n");return 1;}
 	if(!(patch=fopen(argv[1],"r"))){printf("cannot open patch\n");return 2;}
 
 	printf("Parsing patch.txt...\n");
-	map<unsigned int,vector< //CRC32
-		pair<unsigned int, pair<//address
-			vector<unsigned char>,vector<unsigned char> //before, after
+	std::map<unsigned int,std::vector< //CRC32
+		std::pair<unsigned int, std::pair<//address
+			std::vector<unsigned char>,std::vector<unsigned char> //before, after
 		> >
 	> >m;
-	vector<pair<unsigned int,pair<vector<unsigned char>,vector<unsigned char> > > >v;
+	std::vector<std::pair<unsigned int,std::pair<std::vector<unsigned char>,std::vector<unsigned char> > > >v;
 	//m[CRC32][i].first=address .second.first=before .second.second=after
 	while(myfgets((char*)buf,BUFLEN,patch)){ //parse patch
 //cout<<"---"<<buf<<"+"<<last<<"+"<<idx<<"+"<<idx2<<endl;
 		int last=0,idx=0,idx2=0;
-		vector<unsigned int>vcrc;
+		std::vector<unsigned int>vcrc;
 		for(;(idx=strchrindex((char*)buf,'[',last))!=-1;){ //parse header
 			if(idx>(int)strlen((char*)buf)-9)break;
 			idx2=strchrindex((char*)buf,']',idx+1);
@@ -69,8 +63,8 @@ extern "C" int openpatch(const int argc, const char **argv){
 			last=idx+1;
 			if(idx2-idx!=9)continue;
 			//idx+1..last-1 is CRC32
-			tmp=string((char*)buf+idx+1);
-			string s=validate1(tmp);
+			tmp=std::string((char*)buf+idx+1);
+			std::string s=validate1(tmp);
 			if(s.length()==8){
 				unsigned int CRC32;
 				sscanf(s.c_str(),"%08X",&CRC32);
@@ -86,9 +80,9 @@ extern "C" int openpatch(const int argc, const char **argv){
 			if(buf[0]==0||buf[0]=='\r'){
 				break;
 			}
-			vector<unsigned char> before,after;
-			tmp=string((char*)buf);
-			string s=validate1(tmp);
+			std::vector<unsigned char> before,after;
+			tmp=std::string((char*)buf);
+			std::string s=validate1(tmp);
 			if(s.length()>8){printf("address error: %s\n",s.c_str());errflag=1;}
 //cout<<buf<<endl;
 			unsigned int address;
@@ -126,9 +120,9 @@ extern "C" int openpatch(const int argc, const char **argv){
 		//calc CRC32
 		unsigned int CRC32=0;//xffffffff;
 		unsigned int j=filelength(fileno(nds));
-		for(;j;j-=min(j,(u32)BUFLEN)){
-			fread(buf,1,min(j,(u32)BUFLEN),nds);
-			CRC32=crc32(CRC32,buf,min(j,(u32)BUFLEN));
+		for(;j;j-=std::min(j,(u32)BUFLEN)){
+			fread(buf,1,std::min(j,(u32)BUFLEN),nds);
+			CRC32=crc32(CRC32,buf,std::min(j,(u32)BUFLEN));
 		}
 
 		printf("%08X ",CRC32);
@@ -137,7 +131,7 @@ extern "C" int openpatch(const int argc, const char **argv){
 			v=m[CRC32];
 			for(j=0;j<v.size();j++){
 				unsigned int address=v[j].first;
-				vector<unsigned char>before=v[j].second.first;
+				std::vector<unsigned char>before=v[j].second.first;
 				fseek(nds,address,SEEK_SET);
 				fread(buf,1,before.size(),nds);
 				unsigned int k=0;
@@ -146,7 +140,7 @@ extern "C" int openpatch(const int argc, const char **argv){
 			}
 			for(j=0;j<v.size();j++){
 				unsigned int address=v[j].first;
-				vector<unsigned char>after=v[j].second.second;
+				std::vector<unsigned char>after=v[j].second.second;
 				unsigned int k=0;
 				for(;k<after.size();k++)buf[k]=after[k];
 				fseek(nds,address,SEEK_SET);

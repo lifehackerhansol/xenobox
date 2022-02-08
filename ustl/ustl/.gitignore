@@ -1,9 +1,0 @@
-*.o
-*.a
-*.so*
-config.status
-Config.mk
-config.h
-bvt/[a-z][a-z][a-z][a-z0-9][a-z0-9]
-docs/html
-ustl

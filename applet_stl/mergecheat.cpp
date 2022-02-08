@@ -8,14 +8,9 @@
 // Note: never execute on big endian machine!
 
 //vector is the easiest way to store this kind of data.
-#ifdef USTL
-#include <ustl.h>
-using namespace ustl;
-#else
+
 #include <vector>
 #include <string>
-using namespace std;
-#endif
 
 #include "../xenobox.h"
 #define ICONV_BUFFER_SIZE 1024
@@ -64,22 +59,22 @@ typedef struct{
 }cheatindex;
 
 #if 0
-typedef vector<
-	pair<
-		pair<
+typedef std::vector<
+	std::pair<
+		std::pair<
 			cheatindex,
-			string, //game title
-		>, vector<
-			pair<
-				pair<
+			std::string, //game title
+		>, std::vector<
+			std::pair<
+				std::pair<
 					u32, //folder count
-					pair<string,string> //folder title/note
-				>, vector<
-					pair<
-						pair<
+					std::pair<std::string,std::string> //folder title/note
+				>, std::vector<
+					std::pair<
+						std::pair<
 							u32, //whether cheat is ON
-							pair<string,string> //cheat title/note
-						>, vector<u32> //actual cheat
+							std::pair<std::string,std::string> //cheat title/note
+						>, std::vector<u32> //actual cheat
 					>
 				>
 			>
@@ -88,28 +83,28 @@ typedef vector<
 > usrcheat;
 #endif
 
-typedef pair<
-	pair<
+typedef std::pair<
+	std::pair<
 		u32, //whether cheat is ON
-		pair<string,string> //cheat title/note
-	>, vector<u32> //actual cheat
+		std::pair<std::string,std::string> //cheat title/note
+	>, std::vector<u32> //actual cheat
 > cheat;
 
-typedef pair<
-	pair<
+typedef std::pair<
+	std::pair<
 		u32, //folder count
-		pair<string,string> //folder title/note
-	>, vector<cheat>
+		std::pair<std::string,std::string> //folder title/note
+	>, std::vector<cheat>
 > cheatfolder;
 
-typedef pair<
-	pair<
+typedef std::pair<
+	std::pair<
 		cheatindex,
-		string //game title
-	>, vector<cheatfolder>
+		std::string //game title
+	>, std::vector<cheatfolder>
 > gamecheat;
 
-typedef vector<gamecheat> usrcheat;
+typedef std::vector<gamecheat> usrcheat;
 
 static const char *convert(const char *p){
 	if(!piconv || !strcmp(from_code,"") || !strcmp(to_code,"") || !memcmp(from_code,to_code,3))return p; //don't convert
@@ -130,13 +125,13 @@ static const char *convert(const char *p){
 	return _iconv_dst;
 }
 
-static unsigned int *skipstring(unsigned int *o, string &s){
+static unsigned int *skipstring(unsigned int *o, std::string &s){
 	char *p=(char*)o;
 	s=convert(p);
 	return (unsigned int*)( align4((size_t)p+strlen(p)+1) );
 }
 
-static unsigned int *skipnote(unsigned int *o, string &s1, string &s2){
+static unsigned int *skipnote(unsigned int *o, std::string &s1, std::string &s2){
 	char *p=(char*)o;
 	s1=convert(p);
 	p=p+strlen(p)+1; //skip title
@@ -144,13 +139,13 @@ static unsigned int *skipnote(unsigned int *o, string &s1, string &s2){
 	return (unsigned int*)( align4((size_t)p+strlen(p)+1) ); //skip additional note
 }
 
-static unsigned int *writestring(unsigned int *o, string &s){
+static unsigned int *writestring(unsigned int *o, std::string &s){
 	char *p=(char*)o;
 	strcpy(p,s.c_str());
 	return (unsigned int*)( align4((size_t)p+strlen(p)+1) );
 }
 
-static unsigned int *writenote(unsigned int *o, string &s1, string &s2){
+static unsigned int *writenote(unsigned int *o, std::string &s1, std::string &s2){
 	char *p=(char*)o;
 	strcpy(p,s1.c_str());
 	p=p+strlen(p)+1; //skip title

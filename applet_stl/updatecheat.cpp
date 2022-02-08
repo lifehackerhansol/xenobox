@@ -1,24 +1,9 @@
 //never execute on big endian machine!
 
 //how can I use find() within C?
-#ifdef USTL
-#include <ustl.h>
-using namespace ustl;
-template <typename T>
-struct VECTOR: public vector<T>{
-public:
-	bool operator<(const VECTOR<T> &R) const{
-		for(unsigned int i=0;i<this->size();i++)
-			if(this->at(i)!=R.at(i))return this->at(i)<R.at(i);
-		return this->size()<R.size();
-	}
-};
-#else
+
 #include <vector>
 #include <set>
-using namespace std;
-#define VECTOR vector
-#endif
 
 #include "../xenobox.h"
 
@@ -42,8 +27,8 @@ static unsigned int *skipnote(unsigned int *o){
 }
 
 static int stage2(unsigned int *o, unsigned int *n){ //parse usrcheat member
-	set<VECTOR<unsigned int> >s;
-	VECTOR<unsigned int> v;
+	std::set<std::vector<unsigned int> >s;
+	std::vector<unsigned int> v;
 	int ret=0;
 
 	//read all o

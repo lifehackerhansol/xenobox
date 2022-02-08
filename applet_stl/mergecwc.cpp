@@ -1,12 +1,7 @@
 //vector is the easiest way to store this kind of data.
-#ifdef USTL
-#include <ustl.h>
-using namespace ustl;
-#else
+
 #include <vector>
 #include <string>
-using namespace std;
-#endif
 
 #include "../xenobox.h"
 
@@ -24,21 +19,21 @@ char* myfgets(char *buf,int n,FILE *fp){ //accepts LF/CRLF
 unsigned char buf[BUFLEN];
 #endif
 
-typedef pair<
-	pair<int,string>, //enabled? / cheat title
-	vector<u32>       //actual cheat
+typedef std::pair<
+	std::pair<int,std::string>, //enabled? / cheat title
+	std::vector<u32>       //actual cheat
 > cwcheat;
 
-typedef pair<
-	pair<string,string>, //game ID / game name
-	vector<cwcheat>
+typedef std::pair<
+	std::pair<std::string,std::string>, //game ID / game name
+	std::vector<cwcheat>
 > cwgamecheat;
 
-typedef vector<cwgamecheat> cwcheatdb;
+typedef std::vector<cwgamecheat> cwcheatdb;
 
 static int line;
 //0: OK -1:End -2:Ignore 1:Error
-static int cwreadline(FILE *f, string &cmd, string &arg1, string &arg2){
+static int cwreadline(FILE *f, std::string &cmd, std::string &arg1, std::string &arg2){
 	char *p;
 	cmd="",arg1="",arg2="";
 	*cbuf=0;
@@ -68,11 +63,11 @@ static int cwreadline(FILE *f, string &cmd, string &arg1, string &arg2){
 }
 
 static int cwparse(FILE *f,cwcheatdb &db){ //parse usrcheat
-	string cmd,arg1,arg2;
-	string gameID="",gamename="",cheatname="";
+	std::string cmd,arg1,arg2;
+	std::string gameID="",gamename="",cheatname="";
 	int cheat_enable=0;
 	cwgamecheat g;
-	vector<u32> v;
+	std::vector<u32> v;
 	int first_db=1,first_game=1,r;
 
 	line=0;
