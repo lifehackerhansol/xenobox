@@ -1,0 +1,25 @@
+m3dec/m3patch v1a
+These are applications compatible with M3R_iTDS_PP2, which enables to boot M3 firmwares on any clones.
+
+m3dec: M3 firmware header is encrypted. This decrypts it (and reencrypts for your cart, if you want).
+m3patch: M3 firmware check the cart by sending SPI 0xCD command. With m3p patch file this interrupts that.
+
+m3p patch files are credited to Rudolph/mimic.
+iTDSeng_enc.m3p/iTDSgb_enc.m3p is credited to The Pink Cat Boy.
+
+Known header encryption keys:
+M3Real jp : 0x07
+M3Real eng: 0x12
+M3Real gb : 0x23
+iTouch jp : 0x37
+iTouch eng: 0x32
+iTouch gb : 0x33
+R4iRTS    : 0x72
+
+Of course if you want to decrypt to iSakuReal format, specify 0 for reencrypt key in m3dec.
+
+v1 100310
+Reorganized Rudolph's source which is diffecult to read.
+
+v1a 100728
+[m3patch] Fixed a bug that progress bar is drawn per 1 byte...

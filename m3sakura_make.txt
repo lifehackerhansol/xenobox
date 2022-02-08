@@ -1,0 +1,21 @@
+m3sakura_make; to change dsbooter into normal nds
+dsbize; to change normal nds into dsbooter (to replace g6dsload.eng)
+
+[m3sakura_make]
+v2.100506 Written from scratch. Faster than Rudolph's version.
+v2a.100506 m3dec integrated. Header is decrypted automatically.
+v3.100507 Now m3sakura_make doesn't require ndstool (makes pseudo-normal header itself)
+v3.100508 forgot to free file buffer. Padding is no longer added to code size.
+v3a.100728 tmp.7/9 won't have padding.
+v4.100924 Now puts correct header CRC16.
+
+[dsbize]
+v1.100508 You can replace g6dsload.eng with [high limitations]. <- due to VRAM initialization?
+
+bin/TouchPod.nds: M3 extlink loader (TPLoad in normal header)
+bin/misakura.nds: iSakuReal 1.12+a DLDI with fatpatch (updated in v3a) this uses startnds.eng, not .ext
+                  (flashcarts other than M3 can use the GUI)
+bin/g003_misakura.nds: iSakuReal 1.12+G for GMP-Z003. Use with system/Gset_*.eng.
+
+g6dsload.eng: When put in /system, it will redirect to /moonshl2/reload.dat (You can change by binary hack)
+Please get from mshl2tools package(reset_mse)

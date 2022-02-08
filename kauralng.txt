@@ -1,0 +1,10 @@
+How to translate Kaura to your language:
+0. make sure /system/font/CP*** (*** is charcode for your language) exist.
+1. make template
+lngdis lng > txt (for example lngdis EN1250.lng > 1250.txt) (> is required don't forget)
+2. modify txt then save in proper encoding (for JPN, GBK)
+The first line of txt is the charcode (the *** part of /system/font/CP***)
+3. make lng.
+lngasm txt lng (for example lngasm 932.txt > JP932.lng)
+4. put the lng in /system/Kaura/Lang/
+5. put the nation flag in /system/Kaura/Misc/

@@ -1,0 +1,7 @@
+v1.100208 Rewritten dlditool from scratch to avoid dlditool GPL issue.
+v2.100210 Fixed a fatal bug
+v3.100309 Fixed another fatal bug and a bug that dldipatch couldn't patch MoonShell1.
+v4.100510 Added showing dldi info.
+v5.100609 Now dldipatch searches dldi from homebrew.
+v6.100827 Now dldipatch searches dldi section more precisely. Also you can ignore size limit by using ":" like :r4dldi.dat
+v7.110124 stdout and stderr are switched.

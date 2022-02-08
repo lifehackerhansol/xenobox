@@ -1,0 +1,83 @@
+Format of LZOP
+To ensure that this implementation of LZOP is original.
+
+0. Header flags
+0-1. Header flags (part)
+F_ADLER32_D	0x00000001	the LZOP has adler32 checksum for decompressed data.
+F_ADLER32_C	0x00000002	the LZOP has adler32 checksum for compressed data.
+F_STDIN		0x00000004	the LZOP was created using stdin. Ignore mode.
+F_H_EXTRA_FIELD	0x00000040	the LZOP has extra field.
+F_CRC32_D	0x00000100	the LZOP has crc32 checksum for decompressed data.
+F_CRC32_C	0x00000200	the LZOP has crc32 checksum for compressed data.
+F_H_FILTER	0x00000800	the LZOP was created with filter.
+F_H_CRC32	0x00001000	the LZOP has crc32 checksum for header.
+F_H_PATH	0x00002000	mkdir required to restore the file path.
+
+0-2. OS flags (ignored in LZOPd)
+In this part upper 8 bits are shown (the actual value of F_OS_AMIGA is 0x01000000).
+F_OS_FAT	0x00
+F_OS_AMIGA	0x01
+F_OS_VMS	0x02
+F_OS_UNIX	0x03
+F_OS_VM_CMS	0x04
+F_OS_ATARI	0x05
+F_OS_OS2	0x06
+F_OS_MAC9	0x07
+F_OS_Z_SYSTEM	0x08
+F_OS_CPM	0x09
+F_OS_TOPS20	0x0a
+F_OS_NTFS	0x0b
+F_OS_QDOS	0x0c
+F_OS_ACORN	0x0d
+F_OS_VFAT	0x0e
+F_OS_MFS	0x0f
+F_OS_BEOS	0x10
+F_OS_TANDEM	0x11
+
+0-3. Filename encoding flags (ignored in LZOPd)
+F_CS_NATIVE	0x00000000
+F_CS_LATIN1	0x00100000
+F_CS_DOS	0x00200000
+F_CS_WIN32	0x00300000
+F_CS_WIN16	0x00400000
+F_CS_UTF8	0x00500000
+
+1. File structure
+LZOP has two parts: Header and Data.
+
+1-1. Header
+signature : 9 bytes ("\x89LZO\0\xd\xa\x1a\xa")
+version : 2 bytes
+library version : 2 bytes
+if(version>=0x0940) version needed to extract : 2 bytes
+method : 1 byte
+	lzo1x_1=1, lzo1x_1_15=2, lzo1x_999=3, zlib=0x80,
+	nrv1a=0x1a, nrv1b=0x1b, nrv2a=0x2a, nrv2b=0x2b, nrv2d=0x2d
+if(version>=0x0940) compression level : 1 byte (0-9)
+flags : 4 bytes
+if(flags&F_H_FILTER) filter : 4 bytes
+mode : 4 bytes(ignored if flags&F_STDIN)
+mtime_low : 4 bytes (ignored if mtime_low==-1 and version<0x1020)
+if(version>=0x0940) mtime_high : 4 bytes (ignored if version<0x1020)
+filename_len : 1 byte (can be 0)
+filename : filename_len bytes (can be NULL)
+checksum : 4 bytes (flags&F_H_CRC32 ? crc32 : adler32)
+if(flags&F_H_EXTRA_FIELD){
+  extra_field_len : 4 bytes
+  extra_field : extra_field_len bytes
+  extra_field_checksum : 4 bytes (flags&F_H_CRC32 ? crc32 : adler32)
+}
+
+1-2. Data
+decomp_blocksize : 4 bytes (EOF if blocksize==0)
+comp_blocksize : 4 bytes
+if(flags&F_ADLER32_D) decomp_adler32 : 4 bytes
+if(flags&F_CRC32_D) decomp_crc32 : 4 bytes
+if(decomp_blocksize>comp_blocksize){
+  if(flags&F_ADLER32_C) comp_adler32 : 4 bytes
+  if(flags&F_CRC32_C) comp_crc32 : 4 bytes
+  comp_data : comp_blocksize bytes ( to lzo1x_decode() )
+}else{
+  data : decomp_blocksize bytes ( to copy )
+}
+[loop to EOF]

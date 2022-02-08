@@ -1,0 +1,142 @@
+*asm:
+%{mbig-endian:-EB} %{mlittle-endian:-EL} %{mcpu=*:-mcpu=%*} %{march=*:-march=%*} %{mapcs-*:-mapcs-%*} %(subtarget_asm_float_spec) %{mthumb-interwork:-mthumb-interwork} %{msoft-float:-mfloat-abi=soft} %{mhard-float:-mfloat-abi=hard} %{mfloat-abi=*} %{mfpu=*} %(subtarget_extra_asm_spec)
+
+*asm_debug:
+%{!g0:%{gstabs*:--gstabs}%{!gstabs*:%{g*:--gdwarf2}}} %{fdebug-prefix-map=*:--debug-prefix-map %*}
+
+*asm_final:
+
+
+*asm_options:
+%{--target-help:%:print-asm-header()} %{v} %{w:-W} %{I*} %{save-temps:--save-temps} %a %Y %{c:%W{o*}%{!o*:-o %w%b%O}}%{!c:-o %d%w%u%O}
+
+*invoke_as:
+%{!S:-o %|.s |
+ as %(asm_options) %m.s %A }
+
+*cpp:
+%(subtarget_cpp_spec)					%{msoft-float:%{mhard-float:							%e-msoft-float and -mhard_float may not be used together}}	%{mbig-endian:%{mlittle-endian:							%e-mbig-endian and -mlittle-endian may not be used together}} -I/opt/android-ndk/sources/cxx-stl/gnu-libstdc++/include -I/opt/android-ndk/sources/cxx-stl/gnu-libstdc++/libs/armeabi/include 
+
+*cpp_options:
+%(cpp_unique_options) %1 %{m*} %{std*&ansi&trigraphs} %{W*&pedantic*} %{w} %{f*} %{g*:%{!g0:%{g*} %{!fno-working-directory:-fworking-directory}}} %{O*} %{undef} %{save-temps:-fpch-preprocess} %(esp_cpp_options)
+
+*cpp_debug_options:
+%{d*}
+
+*cpp_unique_options:
+%{C|CC:%{!E:%eGCC does not support -C or -CC without -E}} %{!Q:-quiet} %{nostdinc*} %{C} %{CC} %{v} %{I*&F*} %{P} %I %{MD:-MD %{!o:%b.d}%{o*:%.d%*}} %{MMD:-MMD %{!o:%b.d}%{o*:%.d%*}} %{M} %{MM} %{MF*} %{MG} %{MP} %{MQ*} %{MT*} %{!E:%{!M:%{!MM:%{!MT:%{!MQ:%{MD|MMD:%{o*:-MQ %*}}}}}}} %{remap} %{g3|ggdb3|gstabs3|gcoff3|gxcoff3|gvms3:-dD} %{H} %C %{D*&U*&A*} %{i*} %Z %i %{fmudflap:-D_MUDFLAP -include mf-runtime.h} %{fmudflapth:-D_MUDFLAP -D_MUDFLAPTH -include mf-runtime.h} %{E|M|MM:%W{o*}}
+
+*trad_capable_cpp:
+cc1 -E %{traditional|ftraditional|traditional-cpp:-traditional-cpp}
+
+*cc1:
+%{mno-android|tno-android-cc:%{profile:-p};:%{profile:-p} %{!mglibc:%{!muclibc:%{!mbionic: -mbionic}}} %{!fno-pic:%{!fno-PIC:%{!fpic:%{!fPIC: -fpic}}}}}
+
+*cc1_options:
+%{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}} %1 %{!Q:-quiet} -dumpbase %B %{d*} %{m*} %{a*} %{c|S:%{o*:-auxbase-strip %*}%{!o*:-auxbase %b}}%{!c:%{!S:-auxbase %b}} %{g*} %{O*} %{W*&pedantic*} %{w} %{std*&ansi&trigraphs} %{v:-version} %{pg:-p} %{p} %{f*} %{undef} %{Qn:-fno-ident} %{--help:--help} %{--target-help:--target-help} %{--help=*:--help=%(VALUE)} %{!fsyntax-only:%{S:%W{o*}%{!o*:-o %b.s}}} %{fsyntax-only:-o %j} %{-param*} %{fmudflap|fmudflapth:-fno-builtin -fno-merge-constants} %{coverage:-fprofile-arcs -ftest-coverage}  
+
+*cc1plus:
+-fexceptions -frtti
+
+*link_gcc_c_sequence:
+%{static:--start-group} %G %L %{static:--end-group}%{!static:%G}
+
+*link_ssp:
+%{fstack-protector|fstack-protector-all:-lssp_nonshared -lssp}
+
+*endfile:
+%{mno-android|tno-android-ld:%{shared|pie:crtendS.o%s;:crtend.o%s} crtn.o%s;:%{!shared: crtend_android%O%s}}
+
+*link:
+%{!static:--eh-frame-hdr} %{mno-android|tno-android-ld:%{h*} %{version:-v}    %{b}    %{static:-Bstatic}    %{shared:-shared}    %{symbolic:-Bsymbolic}    %{rdynamic:-export-dynamic}    %{!dynamic-linker:-dynamic-linker %{mglibc:/lib/ld-linux.so.3;:%{muclibc:/lib/ld-uClibc.so.0;:/system/bin/linker}}}    -X    %{mbig-endian:-EB} %{mlittle-endian:-EL} -m armelf_linux_eabi;:%{h*} %{version:-v}    %{b}    %{static:-Bstatic}    %{shared:-shared}    %{symbolic:-Bsymbolic}    %{rdynamic:-export-dynamic}    %{!dynamic-linker:-dynamic-linker %{mglibc:/lib/ld-linux.so.3;:%{muclibc:/lib/ld-uClibc.so.0;:/system/bin/linker}}}    -X    %{mbig-endian:-EB} %{mlittle-endian:-EL} -m armelf_linux_eabi %{shared: -Bsymbolic}}
+
+*lib:
+%{mno-android|tno-android-ld:%{pthread:-lpthread}    %{shared:-lc}    %{!shared:%{mieee-fp:-lieee} %{profile:-lc_p}%{!profile:-lc}};:%{pthread:-lpthread}    %{shared:-lc}    %{!shared:%{mieee-fp:-lieee} %{profile:-lc_p}%{!profile:-lc}} %{!static: -ldl}}
+
+*mfwrap:
+ %{static: %{fmudflap|fmudflapth:  --wrap=malloc --wrap=free --wrap=calloc --wrap=realloc --wrap=mmap --wrap=munmap --wrap=alloca} %{fmudflapth: --wrap=pthread_create}} %{fmudflap|fmudflapth: --wrap=main}
+
+*mflib:
+%{fmudflap|fmudflapth: -export-dynamic}
+
+*link_gomp:
+
+
+*libgcc:
+-lgcc
+
+*startfile:
+%{mno-android|tno-android-ld:%{!shared: %{pg|p|profile:gcrt1.o%s;pie:Scrt1.o%s;:crt1.o%s}}    crti.o%s %{static:crtbeginT.o%s;shared|pie:crtbeginS.o%s;:crtbegin.o%s};:%{!shared:  %{static: crtbegin_static%O%s;: crtbegin_dynamic%O%s}}}
+
+*switches_need_spaces:
+
+
+*cross_compile:
+1
+
+*version:
+4.4.3
+
+*multilib:
+. !march=armv7-a !mthumb;armv7-a march=armv7-a !mthumb;thumb !march=armv7-a mthumb;armv7-a/thumb march=armv7-a mthumb;
+
+*multilib_defaults:
+marm mlittle-endian mhard-float mno-thumb-interwork
+
+*multilib_extra:
+
+
+*multilib_matches:
+march=armv7-a march=armv7-a;mthumb mthumb;
+
+*multilib_exclusions:
+
+
+*multilib_options:
+march=armv7-a mthumb
+
+*linker:
+collect2
+
+*link_libgcc:
+-L/opt/android-ndk/sources/cxx-stl/gnu-libstdc++/libs/armeabi %D
+
+*md_exec_prefix:
+
+
+*md_startfile_prefix:
+
+
+*md_startfile_prefix_1:
+
+
+*startfile_prefix_spec:
+
+
+*sysroot_spec:
+--sysroot=%R
+
+*sysroot_suffix_spec:
+
+
+*sysroot_hdrs_suffix_spec:
+
+
+*esp_options:
+
+
+*esp_cpp_options:
+
+
+*subtarget_cpp_spec:
+%{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}
+
+*subtarget_extra_asm_spec:
+%{mabi=apcs-gnu|mabi=atpcs:-meabi=gnu;:-meabi=5} %{mcpu=arm8|mcpu=arm810|mcpu=strongarm*|march=armv4:--fix-v4bx}
+
+*subtarget_asm_float_spec:
+%{mapcs-float:-mfloat}
+
+*link_command:
+%{!fsyntax-only:%{!c:%{!M:%{!MM:%{!E:%{!S:    %(linker) %l %{pie:-pie}   %{fuse-ld=gold:%{fuse-ld=bfd:%e-fuse-ld=gold and -fuse-ld=bfd may not be used together}}     %{fuse-ld=gold:-use-gold}     %{fuse-ld=bfd:-use-ld}%X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} %{r}    %{s} %{t} %{u*} %{x} %{z} %{Z} %{!A:%{!nostdlib:%{!nostartfiles:%S}}}    %{static:} %{L*} %(mfwrap) %(link_libgcc) %o    %{fopenmp|ftree-parallelize-loops=*:%:include(libgomp.spec)%(link_gomp)} %(mflib)    %{fprofile-arcs|fprofile-generate*|fpmu-profile-generate*|coverage:-lgcov}    %{!nostdlib:%{!nodefaultlibs:%(link_ssp) %(link_gcc_c_sequence)}}    %{!A:%{!nostdlib:%{!nostartfiles:%E}}} %{T*} }}}}}}
+

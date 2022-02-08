@@ -1,0 +1,15 @@
+XenoIPS - yet another IPS maker/patcher v4
+Usage: xenoips file <ips
+       xenoips file ips
+       xenoips file newfile >ips
+       xenoips file newfile ips
+
+If you want just IPS patching, you can just select file and ips (using Ctrl key) then drag file to xenoips.
+
+This patcher shows the patched offset so nice for those who fear patching ;)
+And this IPS maker smaller IPS than normal maker...
+
+v1.100405 - Initial version.
+v2.100405 - Redirecting support.
+v3.100406 - IPS creation support (fill operation not implemented).
+v4.100407 - fill operation implemented.

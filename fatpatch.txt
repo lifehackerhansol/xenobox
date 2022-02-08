@@ -1,0 +1,11 @@
+This patches gba_nds_fat to remove "last cluster corruption" bug.
+
+#Sorry but currently we cannot fix MoonShell 1.71.
+#If you do with MoonShell2 in viewing picture please use MoonShell Simply.
+
+A) How to fix CheckDisk / DSOrganize / M3Sakura <=1.1x:
+Just drag and drop nds to fatpatch.exe
+
+B) How to fix MoonShell2:
+1. Drag and drop nds to fatpatch.exe
+2. Drag and drop nds to guidpatch.exe (to fix checksum)
