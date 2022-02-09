@@ -227,11 +227,6 @@ int applets(const int argc, const char **argv){
 }
 
 int _link(const int argc, const char **argv){
-#if defined(FEOS)
-	fprintf(stderr,"linking isn't supported on FeOS.\nin other words: how can I call symlink() on FAT filesystem?\n");
-	return -1;
-#else //FEOS
-
 	if(argc<2){fprintf(stderr,"tell me xenobox path\n");return 1;}
 	int i=USUAL_INDEX;
 	if(!strcmp(argv[0],"link-full")||!strcmp(argv[0],"--link-full"))i=TRIVIAL_INDEX;
@@ -266,8 +261,6 @@ copy:
 	}
 #endif
 	return 0;
-
-#endif //FEOS
 }
 
 static const char *_linkarg[]={
@@ -364,11 +357,7 @@ int main(const int argc, const char **argv){
 #endif
 	char *exe;
 	initstdio();
-#if defined(FEOS)
-	xor_srand((unsigned int)time(NULL));
-#else
 	xor_srand((unsigned int)time(NULL)^(getpid()<<16));
-#endif
 
 	for(i=strlen(argv[0])-1;i>=0;i--){
 		if(argv[0][i]==sep)break;

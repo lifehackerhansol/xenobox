@@ -94,6 +94,8 @@
  * 121219 androidlogo, xenocal
  * 130303 xenociso uses 7z.so and zopfli. fixed fatal bug of base.c.
  * 130314 xenotee
+ continued by lifehackerhansol:
+ * 220209 Update zlib to latest and static link (windows requires zlib from msys2)
  */
 
 #define XENOBOX_REVISION 130314

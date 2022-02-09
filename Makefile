@@ -28,11 +28,12 @@ export STRIP	:=	$(PREFIX)strip
 
 #--- set path
 ### relative path from build
-ifneq ($(OS),Windows_NT)
-LIBS	+=	-ldl
-endif
-LIBS	+= -lz
+ifeq ($(OS),Windows_NT)
+LIBS	+=	-Wl,-Bstatic -lz
+else
+LIBS	+= -Wl,-Bstatic -lz -Wl,-Bdynamic -ldl
 export LIBS
+endif
 
 LIBDIRS	:=	lib /lib
 export LIBDIRS
@@ -63,7 +64,7 @@ CXXFLAGS	:=	$(CFLAGS) -fno-exceptions
 # CFLAGS	+=  -Wno-pointer-sign -std=gnu99
 
 ASFLAGS	:=	$(ARCH)
-LDFLAGS	=	$(ARCH) $(LDF) -O2 -static
+LDFLAGS	=	$(ARCH) $(LDF) -O2
 #-Wl,-Map,$(notdir $*.map)
 
 
