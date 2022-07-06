@@ -151,6 +151,7 @@ static const applet apps[]={ //should be sorted
 	{"r4ilsenc",r4crypt},
 	{"r4isdhc",r4isdhc},
 	{"replaceloader",replaceloader},
+	{"reverseips",reverseips},
 	{"satdecode",satdecode},
 	{"satencode",satencode},
 	{"savconv",savconv},
