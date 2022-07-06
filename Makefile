@@ -5,7 +5,7 @@ ifneq ($(BUILD),$(notdir $(CURDIR)))
 TARGET := xenobox
 
 SOURCES		+= applet applet_stl applet/xenohash lib lib/zlib lib/zopfli .
-INCLUDES	+= 
+INCLUDES	+=
 DATA		+= data 
 
 #--- set toolchain name
@@ -30,12 +30,12 @@ export STRIP	:=	$(PREFIX)strip
 ### relative path from build
 ifeq ($(OS),Windows_NT)
 LIBS	+=	-Wl,-Bstatic -lz
+LIBDIRS	:= /lib
 else
 LIBS	+= -Wl,-Bstatic -lz -Wl,-Bdynamic -ldl
-export LIBS
+LIBDIRS	:= libs
 endif
-
-LIBDIRS	:=	lib /lib
+export LIBS
 export LIBDIRS
 
 ifeq ($(OS),Windows_NT)
@@ -58,7 +58,7 @@ CFLAGS	:=	-Wall -Wno-parentheses \
 #-DNO_VIZ for zlib.
 
 CFLAGS	+=	$(INCLUDE)
-CXXFLAGS	:=	$(CFLAGS) -fno-exceptions
+CXXFLAGS	:=	$(CFLAGS) -fno-exceptions -std=c++17
 #lovely hack...
 #bah -Wno-pointer-sign must be stripped for iPodLinux
 # CFLAGS	+=  -Wno-pointer-sign -std=gnu99

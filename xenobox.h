@@ -98,7 +98,7 @@
  * 220209 Update zlib to latest and static link (windows requires zlib from msys2)
  */
 
-#define XENOBOX_REVISION 130314
+#define XENOBOX_REVISION 220209
 
 // You should use strcasecmp/ftruncate. On Windows, MinGW automatically translates it into stricmp/chsize.
 // Never use _lrotl/r. use lrotl/r.
@@ -376,6 +376,7 @@ F(r4crypt)
 F(r4ilscrypt)
 F(r4isdhc)
 F(replaceloader)
+F(reverseips)
 F(satdecode)
 F(satencode)
 F(savconv)
