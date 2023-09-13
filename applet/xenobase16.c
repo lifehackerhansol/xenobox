@@ -1,47 +1,63 @@
 #include "../xenobox.h"
 
-static const char *t="0123456789abcdef";
+static const char* t = "0123456789abcdef";
 
-static int base16_encode(){
-	int i=0,j=0,b=0,c;
-	u32 x=0;
-	for(;~(c=fgetc(stdin));){
-		x=(x<<8)+c;
-		i++;
-		b+=8;
-		//while(b>=4)
-		b-=4,fputc(t[(x>>b)&0xf],stdout),j++;
-		b-=4,fputc(t[(x>>b)&0xf],stdout),j++;
-		if(j==76){fputc('\n',stdout);j=0;}
-	}
-	//if(b)fputc(t[(x<<(4-b))&0xf],stdout),j++; //shouldn't happen :p
-	if(j)fputc('\n',stdout);
-	return 0;
+static int base16_encode()
+{
+    int i = 0, j = 0, b = 0, c;
+    u32 x = 0;
+    for (; ~(c = fgetc(stdin));)
+    {
+        x = (x << 8) + c;
+        i++;
+        b += 8;
+        // while(b>=4)
+        b -= 4, fputc(t[(x >> b) & 0xf], stdout), j++;
+        b -= 4, fputc(t[(x >> b) & 0xf], stdout), j++;
+        if (j == 76)
+        {
+            fputc('\n', stdout);
+            j = 0;
+        }
+    }
+    // if(b)fputc(t[(x<<(4-b))&0xf],stdout),j++; //shouldn't happen :p
+    if (j)
+        fputc('\n', stdout);
+    return 0;
 }
 
-static int base16_decode(){
-	int b=0,c;
-	u32 x=0;
-	char *p;
-	for(;~(c=fgetc(stdin));){
-		//if(c=='='){
-		//	break;
-		//}
-		if(between('A',c,'F'))c+=0x20;
-		if(p=strchr(t,c)){
-			x=(x<<4)+(p-t);
-			b+=4;
-			if(b>=8)b-=8,fputc((x>>b)&0xff,stdout);
-		}
-	}
-	while(b>=8)b-=8,fputc((x>>b)&0xff,stdout);
-	return 0;
+static int base16_decode()
+{
+    int b = 0, c;
+    u32 x = 0;
+    char* p;
+    for (; ~(c = fgetc(stdin));)
+    {
+        // if(c=='='){
+        //	break;
+        // }
+        if (between('A', c, 'F'))
+            c += 0x20;
+        if (p = strchr(t, c))
+        {
+            x = (x << 4) + (p - t);
+            b += 4;
+            if (b >= 8)
+                b -= 8, fputc((x >> b) & 0xff, stdout);
+        }
+    }
+    while (b >= 8)
+        b -= 8, fputc((x >> b) & 0xff, stdout);
+    return 0;
 }
 
-int xenobase16(const int argc, const char **argv){
-	if(argc>1)return base16_decode();
-	else return base16_encode();
-	//return 0;
+int xenobase16(const int argc, const char** argv)
+{
+    if (argc > 1)
+        return base16_decode();
+    else
+        return base16_encode();
+    // return 0;
 }
 
 #if 0

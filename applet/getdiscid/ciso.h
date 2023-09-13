@@ -9,7 +9,7 @@
 #define __CISO_H__
 
 #ifndef EMU
-//#include <pspiofilemgr.h>
+// #include <pspiofilemgr.h>
 #else
 #endif
 
@@ -17,14 +17,14 @@
 
 typedef struct ciso_header
 {
-    unsigned char magic[4];         /* +00 : 'C','I','S','O'                 */
-    unsigned int  header_size;      /* +04 : header size (==0x18)            */
+    unsigned char magic[4];             /* +00 : 'C','I','S','O'                 */
+    unsigned int header_size;           /* +04 : header size (==0x18)            */
     unsigned long long int total_bytes; /* +08 : number of original data size    */
-    unsigned int  block_size;       /* +10 : number of compressed block size */
-    unsigned char ver;              /* +14 : version 01                      */
-    unsigned char align;            /* +15 : align of index value            */
-    unsigned char rsv_06[2];        /* +16 : reserved                        */
-}CISO_H;
+    unsigned int block_size;            /* +10 : number of compressed block size */
+    unsigned char ver;                  /* +14 : version 01                      */
+    unsigned char align;                /* +15 : align of index value            */
+    unsigned char rsv_06[2];            /* +16 : reserved                        */
+} CISO_H;
 
 #define CISO_HEADER_SIZE (0x18)
 
@@ -72,7 +72,7 @@ int auto_deflate_cso(char* o_buff, int o_size, const char* i_buff, int i_size, i
 
     返値 実際に読み込んだ長さ / エラーの場合は負を返す
 ---------------------------------------------------------------------------*/
-int cso_read(char *buf, const char *path, int pos, int size);
+int cso_read(char* buf, const char* path, int pos, int size);
 
 /*---------------------------------------------------------------------------
   CSOから連続で読込む
@@ -85,7 +85,7 @@ int cso_read(char *buf, const char *path, int pos, int size);
 
     事前にsceIoOpen / 終了後にsceIoCloseが必要
 ---------------------------------------------------------------------------*/
-int cso_read_fp(char *buf, SceUID fp, int pos, int size);
+int cso_read_fp(char* buf, SceUID fp, int pos, int size);
 
 /*---------------------------------------------------------------------------
   CSOに書込む
@@ -97,7 +97,7 @@ int cso_read_fp(char *buf, SceUID fp, int pos, int size);
 
     返値 実際に書込んだ長さ / エラーの場合は負を返す
 ---------------------------------------------------------------------------*/
-int cso_write(const char *buf, const char *path, int pos, int size, int level);
+int cso_write(const char* buf, const char* path, int pos, int size, int level);
 
 /*---------------------------------------------------------------------------
   CSOに連続で書込む
@@ -111,6 +111,6 @@ int cso_write(const char *buf, const char *path, int pos, int size, int level);
 
     事前にsceIoOpen / 終了後にsceIoCloseが必要
 ---------------------------------------------------------------------------*/
-int cso_write_fp(const char *buf, SceUID fp, int pos, int size, int level);
+int cso_write_fp(const char* buf, SceUID fp, int pos, int size, int level);
 
 #endif

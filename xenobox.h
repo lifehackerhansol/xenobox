@@ -106,7 +106,8 @@
 // VisualC++ / C++Builder won't be supported.
 
 #ifdef __cplusplus
-extern "C"{
+extern "C"
+{
 #endif
 
 #include <ctype.h>
@@ -121,341 +122,342 @@ extern "C"{
 
 #include <zlib.h>
 
-typedef unsigned char byte;
+    typedef unsigned char byte;
 #ifndef FEOS
-typedef unsigned char  u8;
-typedef unsigned short u16;
-typedef unsigned int   u32;
-typedef unsigned long long int u64;
+    typedef unsigned char u8;
+    typedef unsigned short u16;
+    typedef unsigned int u32;
+    typedef unsigned long long int u64;
 
-typedef char  s8;
-typedef short s16;
-typedef int   s32;
-typedef long long int s64;
+    typedef char s8;
+    typedef short s16;
+    typedef int s32;
+    typedef long long int s64;
 #endif
 
 #if !defined(__cplusplus)
-//typedef enum { false, true } bool; // <nds/ndstypes.h>
+// typedef enum { false, true } bool; // <nds/ndstypes.h>
 #include <stdbool.h>
 #endif
 
 #if !defined(__cplusplus) && !defined(min)
-#define min(a,b) ((a)<(b)?(a):(b))
-#define max(a,b) ((a)>(b)?(a):(b))
+#define min(a, b) ((a) < (b) ? (a) : (b))
+#define max(a, b) ((a) > (b) ? (a) : (b))
 #endif
 
-#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define between(a, x, b) ((a) <= (x) && (x) <= (b))
 
-//I hope (sizeof(val)*CHAR_BIT-(rot)) will be precalculated in compilation.
-#define lrotr(val,rot) (( (val)<<(sizeof(val)*CHAR_BIT-(rot)) )|( (val)>>(rot) ))
-#define lrotl(val,rot) (( (val)<<(rot) )|( (val)>>(sizeof(val)*CHAR_BIT-(rot)) ))
+// I hope (sizeof(val)*CHAR_BIT-(rot)) will be precalculated in compilation.
+#define lrotr(val, rot) (((val) << (sizeof(val) * CHAR_BIT - (rot))) | ((val) >> (rot)))
+#define lrotl(val, rot) (((val) << (rot)) | ((val) >> (sizeof(val) * CHAR_BIT - (rot))))
 
 #if defined(WIN32) || (!defined(__GNUC__) && !defined(__clang__))
-	#include <windows.h>
-	#include <fcntl.h>
-	#define sleep(t) Sleep(1000*(t))
-	#define initstdio() setmode(fileno(stdin),O_BINARY),setmode(fileno(stdout),O_BINARY),setmode(fileno(stderr),O_BINARY);
-	#define OPEN_BINARY O_BINARY
-	//because of nasty msvcrt
-	#define LLU "%I64u"
-	#if defined(__GNUC__) || defined(__clang__) //fixme
-		#include <unistd.h>
-	#endif
+#include <windows.h>
+#include <fcntl.h>
+#define sleep(t) Sleep(1000 * (t))
+#define initstdio() \
+    setmode(fileno(stdin), O_BINARY), setmode(fileno(stdout), O_BINARY), setmode(fileno(stderr), O_BINARY);
+#define OPEN_BINARY O_BINARY
+// because of nasty msvcrt
+#define LLU "%I64u"
+#if defined(__GNUC__) || defined(__clang__) // fixme
+#include <unistd.h>
+#endif
 #else
-	#include <unistd.h>
-	#include <sys/stat.h>
-	int filelength(int fd);
-	#define initstdio()
-	#define OPEN_BINARY 0
-	#define LLU "%llu"
+#include <unistd.h>
+#include <sys/stat.h>
+int filelength(int fd);
+#define initstdio()
+#define OPEN_BINARY 0
+#define LLU         "%llu"
 
-	#ifdef FEOS //low level IO
-		#define O_RDONLY           0
-		#define O_WRONLY           1
-		#define O_RDWR             2
-		#define O_CREAT        00100
-		#define O_TRUNC        01000
-		#define O_APPEND       02000
+#ifdef FEOS // low level IO
+#define O_RDONLY 0
+#define O_WRONLY 1
+#define O_RDWR   2
+#define O_CREAT  00100
+#define O_TRUNC  01000
+#define O_APPEND 02000
 
-		//fixme...
-		//#define isatty(f) 0
-		int open(const char *name, int flags);
-		int close(int fd);
-		int read(int fd, void *buf, size_t count);
-		int write(int fd, void *buf, size_t count);
-		int lseek(int fd, size_t off, int whence);
-		int access(const char *name, int x);
-		int strcasecmp(const char *s1, const char *s2);
-		int strncasecmp(const char *s1, const char *s2, size_t n);
-		unsigned long long strtoull(const char *s, char **endp, int base);
-	#else
-		#include <fcntl.h>
-	#endif		
-
-	#ifndef NODLOPEN //dynamic load
-	#ifdef FEOS
-		#include <feos.h>
-		#undef ARM9
-		#define LoadLibraryA(filename) FeOS_LoadModule(filename) 
-		#define GetProcAddress FeOS_FindSymbol
-		#define FreeLibrary FeOS_FreeModule
-	#else
-		#include <dlfcn.h>
-		#define LoadLibraryA(filename) dlopen(filename,RTLD_NOW)
-		#define GetProcAddress dlsym
-		#define FreeLibrary dlclose
-	#endif
-	#endif
+// fixme...
+// #define isatty(f) 0
+int open(const char* name, int flags);
+int close(int fd);
+int read(int fd, void* buf, size_t count);
+int write(int fd, void* buf, size_t count);
+int lseek(int fd, size_t off, int whence);
+int access(const char* name, int x);
+int strcasecmp(const char* s1, const char* s2);
+int strncasecmp(const char* s1, const char* s2, size_t n);
+unsigned long long strtoull(const char* s, char** endp, int base);
+#else
+#include <fcntl.h>
 #endif
 
-int sfilelength(const char *path);
-int filemode(int fd);
-int sfilemode(const char *path);
+#ifndef NODLOPEN // dynamic load
+#ifdef FEOS
+#include <feos.h>
+#undef ARM9
+#define LoadLibraryA(filename) FeOS_LoadModule(filename)
+#define GetProcAddress         FeOS_FindSymbol
+#define FreeLibrary            FeOS_FreeModule
+#else
+#include <dlfcn.h>
+#define LoadLibraryA(filename) dlopen(filename, RTLD_NOW)
+#define GetProcAddress         dlsym
+#define FreeLibrary            dlclose
+#endif
+#endif
+#endif
 
-//p should be 2,4,8,...
-#define align2p(p,i) (((i)+((p)-1))&~((p)-1))
+    int sfilelength(const char* path);
+    int filemode(int fd);
+    int sfilemode(const char* path);
 
-#define align2(i) align2p(2,i)
-#define align4(i) align2p(4,i)
-#define align8(i) align2p(8,i)
-#define align256(i) align2p(256,i)
-#define align512(i) align2p(512,i)
-#define swiCRC16 crc16
+// p should be 2,4,8,...
+#define align2p(p, i) (((i) + ((p)-1)) & ~((p)-1))
 
-#define BIT(n) (1<<(n))
+#define align2(i)   align2p(2, i)
+#define align4(i)   align2p(4, i)
+#define align8(i)   align2p(8, i)
+#define align256(i) align2p(256, i)
+#define align512(i) align2p(512, i)
+#define swiCRC16    crc16
+
+#define BIT(n) (1 << (n))
 
 #define isRedirected(file) (!isatty(fileno(file)))
 
-//you should care about BUFLEN if you use these functions in portable devices.
+// you should care about BUFLEN if you use these functions in portable devices.
 #ifdef FEOS
-//512KB
-#define BUFLEN (1<<19)
+// 512KB
+#define BUFLEN (1 << 19)
 #else
-//currently 4MB. some game cheat entry is more than 3MB...
-#define BUFLEN (1<<22)
+// currently 4MB. some game cheat entry is more than 3MB...
+#define BUFLEN (1 << 22)
 #endif
-extern unsigned char buf[BUFLEN];
+    extern unsigned char buf[BUFLEN];
 #define cbuf ((char*)buf)
 
-//64KB
-#define DECOMPBUFLEN (1<<16)
-#define COMPBUFLEN   (DECOMPBUFLEN|(DECOMPBUFLEN>>1))
-extern unsigned char __compbuf[COMPBUFLEN],__decompbuf[DECOMPBUFLEN];
+// 64KB
+#define DECOMPBUFLEN (1 << 16)
+#define COMPBUFLEN   (DECOMPBUFLEN | (DECOMPBUFLEN >> 1))
+    extern unsigned char __compbuf[COMPBUFLEN], __decompbuf[DECOMPBUFLEN];
 
-//util
-unsigned long long int read64(const void *p);
-unsigned int read32(const void *p);
-unsigned int read24(const void *p);
-unsigned short read16(const void *p);
-void write64(void *p, const unsigned long long int n);
-void write32(void *p, const unsigned int n);
-void write24(void *p, const unsigned int n);
-void write16(void *p, const unsigned short n);
+    // util
+    unsigned long long int read64(const void* p);
+    unsigned int read32(const void* p);
+    unsigned int read24(const void* p);
+    unsigned short read16(const void* p);
+    void write64(void* p, const unsigned long long int n);
+    void write32(void* p, const unsigned int n);
+    void write24(void* p, const unsigned int n);
+    void write16(void* p, const unsigned short n);
 
-unsigned int read32be(const void *p);
-unsigned int read24be(const void *p);
-unsigned short read16be(const void *p);
-void write32be(void *p, const unsigned int n);
-void write24be(void *p, const unsigned int n);
-void write16be(void *p, const unsigned short n);
+    unsigned int read32be(const void* p);
+    unsigned int read24be(const void* p);
+    unsigned short read16be(const void* p);
+    void write32be(void* p, const unsigned int n);
+    void write24be(void* p, const unsigned int n);
+    void write16be(void* p, const unsigned short n);
 
-char* myfgets(char *buf,int n,FILE *fp);
-void msleep(int msec);
+    char* myfgets(char* buf, int n, FILE* fp);
+    void msleep(int msec);
 
-unsigned short crc16(unsigned short crc, const unsigned char *p, unsigned int size);
-unsigned int crc32_left(unsigned int crc, const unsigned char *p, unsigned int size);
+    unsigned short crc16(unsigned short crc, const unsigned char* p, unsigned int size);
+    unsigned int crc32_left(unsigned int crc, const unsigned char* p, unsigned int size);
 
-typedef void (*type_u32p)(u32*);
+    typedef void (*type_u32p)(u32*);
 
-int strchrindex(const char *s, const int c, const int idx);
-size_t _FAT_directory_mbstoucs2(unsigned short* dst, const unsigned char* src, size_t len);
-u32 mbstoucs2(unsigned short* dst, const unsigned char* src);
-size_t _FAT_directory_ucs2tombs(unsigned char* dst, const unsigned short* src, size_t len);
-u32 ucs2tombs(unsigned char* dst, const unsigned short* src);
-void NullMemory(void* buf, unsigned int n);
+    int strchrindex(const char* s, const int c, const int idx);
+    size_t _FAT_directory_mbstoucs2(unsigned short* dst, const unsigned char* src, size_t len);
+    u32 mbstoucs2(unsigned short* dst, const unsigned char* src);
+    size_t _FAT_directory_ucs2tombs(unsigned char* dst, const unsigned short* src, size_t len);
+    u32 ucs2tombs(unsigned char* dst, const unsigned short* src);
+    void NullMemory(void* buf, unsigned int n);
 
-int memcmp_fast(const void *x,const void *y,unsigned int len);
+    int memcmp_fast(const void* x, const void* y, unsigned int len);
 
-//xorshift
-unsigned int xor_rand();
-void xor_srand(unsigned int seed);
+    // xorshift
+    unsigned int xor_rand();
+    void xor_srand(unsigned int seed);
 
-//applet
-#define F(name) int name(const int argc, const char **argv);
-F(applets)
-F(_link)
-F(_install)
-F(license)
-F(create)
-F(createff)
-F(_truncate)
-F(_extend)
-F(_cutdown)
-F(_msleep)
+// applet
+#define F(name) int name(const int argc, const char** argv);
+    F(applets)
+    F(_link)
+    F(_install)
+    F(license)
+    F(create)
+    F(createff)
+    F(_truncate)
+    F(_extend)
+    F(_cutdown)
+    F(_msleep)
 
-F(_16bitbmp)
-F(a9_02000000)
-F(akaio151)
-F(akaiodec_v3a)
-F(akaiodec_v4)
-F(akextract)
-F(akextract_ex4)
-F(akextract_wood)
-F(akextract_wood2)
-F(androidlogo)
-F(asn1derdump)
-F(belon)
-F(bin2cstdio)
-F(bin2sstdio)
-F(binreplace)
-F(breaksplash)
-F(checkcheatsize)
-F(checkumdsize)
-F(cmdini)
-F(decievo)
-F(dldipatch)
-F(dldirename)
-F(dlsymtest)
-F(ds2decryptplug)
-F(ds2makeplug)
-F(ds2splitplug)
-F(dsapfilt)
-F(dsbize)
-F(dstwo2ismm)
-F(extinfo2binary)
-F(ezskinfix)
-F(fatpatch)
-F(filepp)
-F(fixheader)
-F(fixloaderstartup)
-F(gbalzssrawstdio)
-F(gdd2011android)
-F(gencrctable)
-F(getdiscid)
-F(getdiscid_lite)
-F(getebootid)
-F(getjavacert)
-F(getyomecolleuid)
-F(google2fa)
-F(guidbreak)
-F(guidpatch)
-F(gunprx)
-F(gzprx)
-F(h4xms2)
-F(ilshield_aes)
-F(ilshield_des)
-F(ilshield_3des)
-F(kallsymslookupsearch)
-F(kauralngasm)
-F(kauralngdis)
-F(kawdecode)
-F(kawencode)
-F(keyconvertnds)
-F(keyconvertpsp)
-F(libfatreduce)
-F(m3dec)
-F(m3make)
-F(m3patch)
-F(m4c2m4a)
-F(makesplash)
-F(mergecheat) //C++(STL)
-F(mergecwc) //C++(STL)
-F(mmcprotectsearch)
-F(modifybanner)
-F(moo)
-F(mselink)
-F(ndsarmsizefilter)
-F(ndslink)
-F(nidcalc)
-F(nsc)
-F(openpatch) //C++(STL)
-F(openpatch_single)
-F(ovrcextract)
-F(r4brute)
-F(r4crypt)
-F(r4ilscrypt)
-F(r4isdhc)
-F(replaceloader)
-F(reverseips)
-F(satdecode)
-F(satencode)
-F(savconv)
-F(sdatexpand)
-F(splitbootimg)
-F(sprotectsearch)
-F(sucnv2ips)
-//F(tobinary)
-F(unandrobook)
-F(unlzop)
-F(unsnowflake)
-F(unxorhtml)
-F(unyomecolle)
-F(updatecheat) //C++(STL)
-F(wdayloader)
-F(xenoadler32)
-F(xenoalloc)
-F(xenobase16)
-F(xenobase32)
-F(xenobase32hex)
-F(xenobase64)
-F(xenobase85)
-F(xenobase85rfc)
-F(xenobase91)
-F(xenobf)
-F(xenobootfw)
-F(xenobsdsum)
-F(xenobz2crc32)
-F(xenocal)
-F(xenocat)
-F(xenociso)
-F(xenocksum)
-F(xenocrc16)
-F(xenocrc32)
-F(xenocrypt)
-F(xenodate)
-F(xenodaxcr)
-F(xenodice)
-F(xenoelf32)
-F(xenoexcelbase)
-F(xenofrob)
-F(xenofunzip)
-F(xenogbatrim)
-F(xenogzip)
-F(xenohash)
-F(xenohead)
-F(xenoips)
-F(xenojiso)
-F(xenomd5sum)
-F(xenomoonguid)
-F(xenondstrim)
-F(xenopbp)
-F(xenoppf)
-F(xenosha1sum)
-F(xenosha256sum)
-F(xenosize)
-F(xenosum32)
-F(xenosysvsum)
-F(xenotee)
-F(xenounubinize)
-F(xenoups)
-F(xenouuencode)
-F(xenowips)
-F(xenoxxencode)
-F(xenozeller)
-F(yspatch)
-F(zlibrawstdio)
-F(zlibrawstdio2)
-F(yzpasscode)
+    F(_16bitbmp)
+    F(a9_02000000)
+    F(akaio151)
+    F(akaiodec_v3a)
+    F(akaiodec_v4)
+    F(akextract)
+    F(akextract_ex4)
+    F(akextract_wood)
+    F(akextract_wood2)
+    F(androidlogo)
+    F(asn1derdump)
+    F(belon)
+    F(bin2cstdio)
+    F(bin2sstdio)
+    F(binreplace)
+    F(breaksplash)
+    F(checkcheatsize)
+    F(checkumdsize)
+    F(cmdini)
+    F(decievo)
+    F(dldipatch)
+    F(dldirename)
+    F(dlsymtest)
+    F(ds2decryptplug)
+    F(ds2makeplug)
+    F(ds2splitplug)
+    F(dsapfilt)
+    F(dsbize)
+    F(dstwo2ismm)
+    F(extinfo2binary)
+    F(ezskinfix)
+    F(fatpatch)
+    F(filepp)
+    F(fixheader)
+    F(fixloaderstartup)
+    F(gbalzssrawstdio)
+    F(gdd2011android)
+    F(gencrctable)
+    F(getdiscid)
+    F(getdiscid_lite)
+    F(getebootid)
+    F(getjavacert)
+    F(getyomecolleuid)
+    F(google2fa)
+    F(guidbreak)
+    F(guidpatch)
+    F(gunprx)
+    F(gzprx)
+    F(h4xms2)
+    F(ilshield_aes)
+    F(ilshield_des)
+    F(ilshield_3des)
+    F(kallsymslookupsearch)
+    F(kauralngasm)
+    F(kauralngdis)
+    F(kawdecode)
+    F(kawencode)
+    F(keyconvertnds)
+    F(keyconvertpsp)
+    F(libfatreduce)
+    F(m3dec)
+    F(m3make)
+    F(m3patch)
+    F(m4c2m4a)
+    F(makesplash)
+    F(mergecheat) // C++(STL)
+    F(mergecwc)   // C++(STL)
+    F(mmcprotectsearch)
+    F(modifybanner)
+    F(moo)
+    F(mselink)
+    F(ndsarmsizefilter)
+    F(ndslink)
+    F(nidcalc)
+    F(nsc)
+    F(openpatch) // C++(STL)
+    F(openpatch_single)
+    F(ovrcextract)
+    F(r4brute)
+    F(r4crypt)
+    F(r4ilscrypt)
+    F(r4isdhc)
+    F(replaceloader)
+    F(reverseips)
+    F(satdecode)
+    F(satencode)
+    F(savconv)
+    F(sdatexpand)
+    F(splitbootimg)
+    F(sprotectsearch)
+    F(sucnv2ips)
+    // F(tobinary)
+    F(unandrobook)
+    F(unlzop)
+    F(unsnowflake)
+    F(unxorhtml)
+    F(unyomecolle)
+    F(updatecheat) // C++(STL)
+    F(wdayloader)
+    F(xenoadler32)
+    F(xenoalloc)
+    F(xenobase16)
+    F(xenobase32)
+    F(xenobase32hex)
+    F(xenobase64)
+    F(xenobase85)
+    F(xenobase85rfc)
+    F(xenobase91)
+    F(xenobf)
+    F(xenobootfw)
+    F(xenobsdsum)
+    F(xenobz2crc32)
+    F(xenocal)
+    F(xenocat)
+    F(xenociso)
+    F(xenocksum)
+    F(xenocrc16)
+    F(xenocrc32)
+    F(xenocrypt)
+    F(xenodate)
+    F(xenodaxcr)
+    F(xenodice)
+    F(xenoelf32)
+    F(xenoexcelbase)
+    F(xenofrob)
+    F(xenofunzip)
+    F(xenogbatrim)
+    F(xenogzip)
+    F(xenohash)
+    F(xenohead)
+    F(xenoips)
+    F(xenojiso)
+    F(xenomd5sum)
+    F(xenomoonguid)
+    F(xenondstrim)
+    F(xenopbp)
+    F(xenoppf)
+    F(xenosha1sum)
+    F(xenosha256sum)
+    F(xenosize)
+    F(xenosum32)
+    F(xenosysvsum)
+    F(xenotee)
+    F(xenounubinize)
+    F(xenoups)
+    F(xenouuencode)
+    F(xenowips)
+    F(xenoxxencode)
+    F(xenozeller)
+    F(yspatch)
+    F(zlibrawstdio)
+    F(zlibrawstdio2)
+    F(yzpasscode)
 #undef F
 
-typedef struct{
-	char *name;
-	int  (*func)(const int, const char**);
-}applet;
+    typedef struct
+    {
+        char* name;
+        int (*func)(const int, const char**);
+    } applet;
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif
-

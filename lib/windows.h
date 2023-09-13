@@ -1,13 +1,13 @@
 /*
-	windows.h - main header file for the Win32 API
+    windows.h - main header file for the Win32 API
 
-	Written by Anders Norlander <anorland@hem2.passagen.se>
+    Written by Anders Norlander <anorland@hem2.passagen.se>
 
-	This file is part of a free library for the Win32 API.
+    This file is part of a free library for the Win32 API.
 
-	This library is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 */
 #ifndef _WINDOWS_H
@@ -24,7 +24,7 @@
 #endif
 
 #undef MAX_PATH
-#define MAX_PATH 4096  /* Linux : 4096  - Windows : 260 */
+#define MAX_PATH 4096 /* Linux : 4096  - Windows : 260 */
 
 #ifndef FALSE
 #define FALSE 0
@@ -33,20 +33,20 @@
 #define TRUE 1
 #endif
 
-#define WINAPI 
+#define WINAPI
 
 #undef BOOL
 typedef int BOOL;
 
 /* BEGIN #include <winnt.h> */
 /* BEGIN <winerror.h> */
-#define NO_ERROR                    0L
-#define ERROR_ALREADY_EXISTS        EEXIST
-#define ERROR_FILE_EXISTS           EEXIST
-#define ERROR_INVALID_HANDLE        EBADF
-#define ERROR_PATH_NOT_FOUND        ENOENT
-#define ERROR_DISK_FULL             ENOSPC
-#define ERROR_NO_MORE_FILES         0x100123 // FIXME
+#define NO_ERROR             0L
+#define ERROR_ALREADY_EXISTS EEXIST
+#define ERROR_FILE_EXISTS    EEXIST
+#define ERROR_INVALID_HANDLE EBADF
+#define ERROR_PATH_NOT_FOUND ENOENT
+#define ERROR_DISK_FULL      ENOSPC
+#define ERROR_NO_MORE_FILES  0x100123 // FIXME
 
 /* see Common/WyWindows.h
 #define S_OK ((HRESULT)0x00000000L)
@@ -64,10 +64,10 @@ typedef int BOOL;
 #ifndef VOID
 #define VOID void
 #endif
-typedef void *PVOID,*LPVOID;
-typedef WCHAR *LPWSTR;
-typedef CHAR *LPSTR;
-typedef TCHAR *LPTSTR;
+typedef void *PVOID, *LPVOID;
+typedef WCHAR* LPWSTR;
+typedef CHAR* LPSTR;
+typedef TCHAR* LPTSTR;
 
 #ifdef UNICODE
 /*
@@ -86,7 +86,7 @@ typedef TCHAR *LPTSTR;
  * The corresponding macros  _TEXT() and _T() for mapping _UNICODE strings
  * passed to C runtime functions are defined in mingw/tchar.h
  */
-#define TEXT(q) P7ZIP_TEXT(q)    
+#define TEXT(q) P7ZIP_TEXT(q)
 
 typedef BYTE BOOLEAN;
 
@@ -98,20 +98,20 @@ typedef unsigned __int64 UINT64;
 typedef __int64 INT64;
 /* END #include <basetsd.h> */
 
-#define FILE_ATTRIBUTE_READONLY             1
-#define FILE_ATTRIBUTE_HIDDEN               2
-#define FILE_ATTRIBUTE_SYSTEM               4
-#define FILE_ATTRIBUTE_DIRECTORY           16
-#define FILE_ATTRIBUTE_ARCHIVE             32
-#define FILE_ATTRIBUTE_DEVICE              64
-#define FILE_ATTRIBUTE_NORMAL             128
-#define FILE_ATTRIBUTE_TEMPORARY          256
-#define FILE_ATTRIBUTE_SPARSE_FILE        512
-#define FILE_ATTRIBUTE_REPARSE_POINT     1024
-#define FILE_ATTRIBUTE_COMPRESSED        2048
-#define FILE_ATTRIBUTE_OFFLINE          0x1000
-#define FILE_ATTRIBUTE_ENCRYPTED        0x4000
-#define FILE_ATTRIBUTE_UNIX_EXTENSION   0x8000   /* trick for Unix */
+#define FILE_ATTRIBUTE_READONLY       1
+#define FILE_ATTRIBUTE_HIDDEN         2
+#define FILE_ATTRIBUTE_SYSTEM         4
+#define FILE_ATTRIBUTE_DIRECTORY      16
+#define FILE_ATTRIBUTE_ARCHIVE        32
+#define FILE_ATTRIBUTE_DEVICE         64
+#define FILE_ATTRIBUTE_NORMAL         128
+#define FILE_ATTRIBUTE_TEMPORARY      256
+#define FILE_ATTRIBUTE_SPARSE_FILE    512
+#define FILE_ATTRIBUTE_REPARSE_POINT  1024
+#define FILE_ATTRIBUTE_COMPRESSED     2048
+#define FILE_ATTRIBUTE_OFFLINE        0x1000
+#define FILE_ATTRIBUTE_ENCRYPTED      0x4000
+#define FILE_ATTRIBUTE_UNIX_EXTENSION 0x8000 /* trick for Unix */
 
 /* END   <winerror.h> */
 
@@ -125,32 +125,34 @@ typedef __int64 INT64;
 /* BEGIN #include <winbase.h> */
 
 #define WAIT_OBJECT_0 0
-#define INFINITE	0xFFFFFFFF
+#define INFINITE      0xFFFFFFFF
 
-typedef struct _SYSTEMTIME {
-	WORD wYear;
-	WORD wMonth;
-	WORD wDayOfWeek;
-	WORD wDay;
-	WORD wHour;
-	WORD wMinute;
-	WORD wSecond;
-	WORD wMilliseconds;
+typedef struct _SYSTEMTIME
+{
+    WORD wYear;
+    WORD wMonth;
+    WORD wDayOfWeek;
+    WORD wDay;
+    WORD wHour;
+    WORD wMinute;
+    WORD wSecond;
+    WORD wMilliseconds;
 } SYSTEMTIME;
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-BOOL WINAPI DosDateTimeToFileTime(WORD,WORD,FILETIME *);
-BOOL WINAPI FileTimeToDosDateTime(CONST FILETIME *,WORD *, WORD *);
-BOOL WINAPI FileTimeToLocalFileTime(CONST FILETIME *,FILETIME *);
-BOOL WINAPI FileTimeToSystemTime(CONST FILETIME *,SYSTEMTIME *);
-BOOL WINAPI LocalFileTimeToFileTime(CONST FILETIME *,FILETIME *);
-VOID WINAPI GetSystemTime(SYSTEMTIME *);
-BOOL WINAPI SystemTimeToFileTime(const SYSTEMTIME*,FILETIME *);
+    BOOL WINAPI DosDateTimeToFileTime(WORD, WORD, FILETIME*);
+    BOOL WINAPI FileTimeToDosDateTime(CONST FILETIME*, WORD*, WORD*);
+    BOOL WINAPI FileTimeToLocalFileTime(CONST FILETIME*, FILETIME*);
+    BOOL WINAPI FileTimeToSystemTime(CONST FILETIME*, SYSTEMTIME*);
+    BOOL WINAPI LocalFileTimeToFileTime(CONST FILETIME*, FILETIME*);
+    VOID WINAPI GetSystemTime(SYSTEMTIME*);
+    BOOL WINAPI SystemTimeToFileTime(const SYSTEMTIME*, FILETIME*);
 
-DWORD WINAPI GetTickCount(VOID);
+    DWORD WINAPI GetTickCount(VOID);
 
 #ifdef __cplusplus
 }
@@ -167,28 +169,27 @@ DWORD WINAPI GetTickCount(VOID);
 #include "basetyps.h"
 struct IEnumSTATPROPSTG;
 
-typedef struct  tagSTATPROPSTG {
-	LPOLESTR lpwstrName;
-	PROPID propid;
-	VARTYPE vt;
+typedef struct tagSTATPROPSTG
+{
+    LPOLESTR lpwstrName;
+    PROPID propid;
+    VARTYPE vt;
 } STATPROPSTG;
 
 #ifdef __cplusplus
 extern "C" const IID IID_ISequentialStream;
 struct ISequentialStream : public IUnknown
 {
-	STDMETHOD(QueryInterface)(REFIID,PVOID*) PURE;
-	STDMETHOD_(ULONG,AddRef)(void) PURE;
-	STDMETHOD_(ULONG,Release)(void) PURE;
-	STDMETHOD(Read)(void*,ULONG,ULONG*) PURE;
-	STDMETHOD(Write)(void const*,ULONG,ULONG*) PURE;
+    STDMETHOD(QueryInterface)(REFIID, PVOID*) PURE;
+    STDMETHOD_(ULONG, AddRef)(void) PURE;
+    STDMETHOD_(ULONG, Release)(void) PURE;
+    STDMETHOD(Read)(void*, ULONG, ULONG*) PURE;
+    STDMETHOD(Write)(void const*, ULONG, ULONG*) PURE;
 };
 #else
 extern const IID IID_ISequentialStream;
-#endif  /* __cplusplus */
-
+#endif /* __cplusplus */
 
 /* END #include <ole2.h> */
 
 #endif
-
